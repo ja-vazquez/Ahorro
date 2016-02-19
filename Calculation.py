@@ -9,13 +9,12 @@ class Calculation:
         self.dates   = dates
         self.depos   = depos
         self.person  = Person
-
+        self.months  = self.person.months + self.month
 
 
 
     def interest(self, hoy):
-        months  = self.person.months + self.month
-        self.lmonths = len(months)
+        self.lmonths = len(self.months)
 
         tot_depos = np.zeros(self.lmonths)
         tot_inter = np.zeros(self.lmonths)
@@ -30,7 +29,7 @@ class Calculation:
             interes.append(deposito*percentage)
 
                 #account for each month
-            if months[i] in self.dates[l][3:]:
+            if self.months[i] in self.dates[l][3:]:
                 tot_depos[i] += deposito
                 tot_inter[i] += deposito*percentage
                 k += 1
