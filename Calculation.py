@@ -25,7 +25,10 @@ class Calculation:
             deposito = float(self.depos[l])
 
                 #fraction of the percentage depending on the deposit day
-            percentage = (hoy - float(self.dates[l][:2]))/30. * self.person.perct
+            if self.month[0] == self.dates[l][3:]:
+                percentage = (hoy - float(self.dates[l][:2]))/30. * self.person.perct
+            else:
+                percentage = self.person.perct
             interes.append(deposito*percentage)
 
                 #account for each month
@@ -39,6 +42,7 @@ class Calculation:
                 tot_depos[i] += deposito
                 tot_inter[i] += deposito*percentage
 
+        self.kk        = k
         self.tot_depos = tot_depos
         self.tot_inter = tot_inter
 
@@ -47,20 +51,25 @@ class Calculation:
 
     def total(self):
         sum_tot_depos = np.zeros(self.lmonths)
+        sum_tot_inter = np.zeros(self.lmonths)
         final         = np.zeros(self.lmonths)
-        tmp1, sum_tot_inter, cumul_inter = 0, 0, 0
+        tmp1, tmp2, cumul_inter = 0, 0, 0
 
         for i in range(self.lmonths):
             tmp1            += self.tot_depos[i]
-            sum_tot_inter   += self.tot_inter[i]
+            tmp2            += self.tot_inter[i]
+
             sum_tot_depos[i]+= tmp1
+            sum_tot_inter[i]+= tmp2
 
-            cumul_inter  += 0 if i==0 else sum_tot_depos[i-1]*self.person.perct
-            final[i]      = tmp1 + sum_tot_inter + cumul_inter
-
-        return sum_tot_depos, final
+            cumul_inter   += 0 if i==0 else sum_tot_depos[i-1]*self.person.perct
+            final[i]      = tmp1 + tmp2 + cumul_inter
 
 
+        self.sum_tot_depos = sum_tot_depos
+        self.sum_tot_inter = sum_tot_inter
+        self.cumul_inter   = cumul_inter
+        self.final         = final
 
 
 

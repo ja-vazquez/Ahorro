@@ -42,8 +42,8 @@ def make_plot(ax, xinfo, yinfo, color='lime', legend="legend",
 
 
 
-def make_latex(Person, month):
-    with open('Edo_%s_%s.tex'%(Person.name, month[0]), 'w') as f:
+def make_latex(Person, Info, dir, hoy, nmonth):
+    with open('%s/%s/Edo_%s_%s.tex'%(dir, Info.month[0], Person.name, Info.month[0]), 'w') as f:
 
         input_1 = """
 \documentclass[11pt,secnumarabic,nofootinbib,preprintnumbers,amsmath,amssymb,aps]{revtex4}
@@ -59,7 +59,7 @@ def make_latex(Person, month):
         """
         f.write(input_1 + '\n')
 
-        f.write('\\title{ESTADO DE CUENTA: %s.2016}\n'%(month[0]))
+        f.write('\\title{ESTADO DE CUENTA: %s.2016}\n'%(Info.month[0]))
         f.write('\\author{%s}\n'%(Person.full_name))
         f.write('\\email[Contacto:~]{%s}\n'%(Person.email))
 
@@ -69,8 +69,8 @@ def make_latex(Person, month):
 \maketitle\n
 
 Estado de cuenta correspondiente al mes de %s del 2016, considerando una
-tasa de inter\\'es del %.1f\%% anual~\\footnote{IVA incluido.}.\n
-        """%(month[0], Person.perct*100*12)
+tasa de inter\\'es del %.1f\%% anual.\n
+        """%(nmonth, Person.perct*100*12)
         f.write(input_2 + '\n\n')
 
 
@@ -81,17 +81,69 @@ tasa de inter\\'es del %.1f\%% anual~\\footnote{IVA incluido.}.\n
 \hline
 \hline
 \\vspace{0.1cm}
-Fecha de transacci\\'on  \qquad \qquad & Monto \qquad \qquad&  \qquad \qquad Inter\\'es & \qquad  \qquad Total  \\\\
+Fecha de transacci\\'on  \qquad \qquad & Monto \qquad \qquad&  \qquad \qquad Inter\\'es acumulado & \qquad  \qquad Total  \\\\
 \hline
 \\vspace{0.1cm}
         """
         f.write(input_3 + '\n\n')
 
 
+        if len(Info.months) > 1:
+            input_4 = """
+$\leftarrow$ %s/16'  \qquad \qquad & \$%.2f MXN     & \qquad \qquad  \$%.2f MXN & \qquad \qquad   \$%.2f MXN   \\\\
+            """%(Info.month[0], Info.final[-2], Info.sum_tot_inter[-2], Info.final[-2] + Info.sum_tot_inter[-2])
+            f.write(input_4 + '\n\n')
+
+            Info.kk = Info.kk + 1           #need to check the reason of this
 
 
+        for n in range(Info.kk, 0, -1):
+            input_5 = """
+%s/16'  \qquad  \qquad  & \$%.2f MXN   & \qquad \qquad  \$%.2f MXN & \qquad \qquad   \$%.2f MXN      \\\\
+            """%(Info.dates[-n], Info.depos[-n], Info.tot_inter[-n], Info.depos[-n] + Info.tot_inter[-n])
+            f.write(input_5 + '\n\n')
 
 
+        input_6 = """
+\hline
+-                       \qquad  \qquad  &- & \qquad \qquad - & \qquad \qquad    \color{blue}{= \$ \\bf %.2f MXN}     \\\\
+        """%(Info.final[-1])
+        f.write(input_6 + '\n\n')
+
+
+        input_7 = """
+\hline
+\hline
+\end{tabular}
+\label{tab:omega}
+\end{center}
+\end{table}
+
+\\begin{figure}[h!]
+\\begin{center}
+\\includegraphics[trim = 1mm 1mm 1mm 1mm, clip, width=13cm, height=8cm]{Plots_%s_%s.pdf}
+
+\caption{Izquierda: dep\\'ositos realizados hasta %s-2016.
+Derecha: monto total acumulado en la cuenta hasta  el %s-%s-2016.}
+\label{fig:alpha}
+\end{center}
+\end{figure}
+
+        """%(Person.name, Info.months[-1], nmonth, hoy, nmonth)
+        f.write(input_7+'\n')
+
+        f.write("\centering {Anual   \qquad \qquad Deposito \qquad \qquad Inter\\'es acumulado \qquad  \qquad Total \qquad \qquad \hspace{2cm}}\\\\  \n")
+
+        f.write("\centering {2016: \qquad  \\fbox{\qquad   \$ %5.2f \qquad  ,\qquad   \$ %5.2f \qquad ,\qquad    \$ %5.2f \qquad}}\\\\ \n"%(
+            Info.sum_tot_depos[-1], Info.final[-1] - Info.sum_tot_depos[-1], Info.final[-1]))
+
+
+        if Person.depos_2015 != 0:
+            f.write("\centering {2015: \qquad  \\fbox{\qquad   \$ %5.2f \qquad  ,\qquad   \$ %5.2f \qquad ,\qquad    \$ %5.2f \qquad}}\\\\ \n \n"%(
+                Person.depos_2015, Person.final_2015 - Person.depos_2015, Person.final_2015))
+
+
+        f.write('\end{document}')
 
 
 

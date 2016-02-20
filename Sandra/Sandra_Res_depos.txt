@@ -1,3 +1,0 @@
-Date	Deposito
-01/Jan	4753.1
-10/Feb	1000.0
