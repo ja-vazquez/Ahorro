@@ -9,6 +9,9 @@ import matplotlib.pyplot as plt
 from matplotlib import gridspec
 
 
+print 'Add projections for the end of the year'
+print 'i.e. if you keep that amount you\'ll geg ? at the end of the year'
+
     #Information about people
 Make_plot = True
 Edo_cuenta= True
