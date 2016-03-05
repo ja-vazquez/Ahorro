@@ -22,7 +22,7 @@ directory = '/Users/josevazquezgonzalez/Desktop/TODOs/Investing/Ahorro'
 
     #Up to which date
 today = datetime.date.today()
-hoy   = int(today.strftime('%d'))
+hoy   = 29 #int(today.strftime('%d'))
 
 
 

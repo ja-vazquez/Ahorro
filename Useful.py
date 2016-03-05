@@ -68,9 +68,9 @@ def make_latex(Person, Info, dir, hoy, nmonth):
 \date{\\today}\n
 \maketitle\n
 
-Estado de cuenta correspondiente al mes de %s del 2016, considerando una
+Estado de cuenta correspondiente hasta  el %s-%s del 2016, considerando una
 tasa de inter\\'es del %.1f\%% anual.\n
-        """%(nmonth, Person.perct*100*12)
+        """%(hoy, nmonth, Person.perct*100*12)
         f.write(input_2 + '\n\n')
 
 
@@ -96,11 +96,10 @@ $\leftarrow$ %s/16'  \qquad \qquad & \$%.2f MXN     & \qquad \qquad  \$%.2f MXN 
 
             Info.kk = Info.kk + 1           #need to check the reason of this
 
-
         for n in range(Info.kk, 0, -1):
             input_5 = """
 %s/16'  \qquad  \qquad  & \$%.2f MXN   & \qquad \qquad  \$%.2f MXN & \qquad \qquad   \$%.2f MXN      \\\\
-            """%(Info.dates[-n], Info.depos[-n], Info.tot_inter[-n], Info.depos[-n] + Info.tot_inter[-n])
+            """%(Info.dates[-n], Info.depos[-n], Info.interes[-n], Info.depos[-n] + Info.interes[-n])
             f.write(input_5 + '\n\n')
 
 

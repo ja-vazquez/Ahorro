@@ -41,11 +41,11 @@ class Calculation:
                 i += 1
                 tot_depos[i] += deposito
                 tot_inter[i] += deposito*percentage
-
+	
         self.kk        = k
+	self.interes   = interes
         self.tot_depos = tot_depos
         self.tot_inter = tot_inter
-
 
 
 
