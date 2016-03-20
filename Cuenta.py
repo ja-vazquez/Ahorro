@@ -15,15 +15,16 @@ print 'i.e. if you keep that amount you\'ll geg ? at the end of the year'
     #Information about people
 Make_plot = True
 Edo_cuenta= True
-nmonth    = 'Febrero'
-month     = ['Feb']
-directory = '/Users/josevazquezgonzalez/Desktop/TODOs/Investing/Ahorro'
+month     = ['Feb','Mar']
+
 
 
     #Up to which date
 today = datetime.date.today()
-hoy   = 29 #int(today.strftime('%d'))
+hoy   = int(today.strftime('%d'))
 
+abb_month = today.strftime("%b")
+nmonth    = month_spanish(abb_month)
 
 
     #Select a particular person
@@ -37,7 +38,9 @@ else:
     #Read its deposit file
 dir  = 'Investors/' + Person.name
 file = '/' + dir + '/' + Person.name + '_Res_depos.txt'
+directory = os.path.dirname(os.path.realpath(__file__))
 dates, depos = read_file(directory + file)
+
 
 
     #Perform the calculation of total interest
@@ -51,7 +54,7 @@ commd = """ mkdir %s/%s
 """%(dir, Info.months[-1])
 os.system(commd)
 
-print Info.months
+
     #Now we produce some plots
 if  Make_plot:
     fig = plt.figure(figsize = (12, 7))
@@ -85,6 +88,6 @@ if Edo_cuenta:
     pdflatex Edo_%s_%s.tex
     open -a Preview Edo_%s_%s.pdf
     rm *aux *log *out
-    """%(dir, Info.months[-1], Person.name, Info.month[0], Person.name, Info.month[0])
+    """%(dir, month[-1], Person.name, month[-1], Person.name, month[-1])
     os.system(command)
 
