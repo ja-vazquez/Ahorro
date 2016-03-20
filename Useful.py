@@ -1,12 +1,20 @@
 
 import csv
-from People import *
+import os, sys
 import pylab
 import numpy as np
+from People import *
 import matplotlib.pyplot as plt
 
 
-def month_spanish(mon):
+def call_error():
+    print ''
+    sys.exit(" ------------------"
+             " Error: Write person's name "
+             "-------------------")
+
+
+def traslation(mon):
     month_spa = {'Jan':'Enero', 'Feb':'Febrero',
                  'Mar':'Marzo', 'Apr':'Abril', 'May':'Mayo',
                  'Jun':'Junio', 'Jul':'Julio', 'Aug':'Agosto',
@@ -53,8 +61,8 @@ def make_plot(ax, xinfo, yinfo, color='lime', legend="legend",
 
 
 
-def make_latex(Person, Info, dir, hoy, nmonth):
-    with open('%s/%s/Edo_%s_%s.tex'%(dir, Info.month[-1], Person.name, Info.month[-1]), 'w') as f:
+def make_latex(Person, Info, dir, today, month_name):
+    with open('%s/%s/Edo_%s_%s.tex'%(dir, Info.all_months[-1], Person.name, Info.all_months[-1]), 'w') as f:
 
         input_1 = """
 \documentclass[11pt,secnumarabic,nofootinbib,preprintnumbers,amsmath,amssymb,aps]{revtex4}
@@ -70,7 +78,7 @@ def make_latex(Person, Info, dir, hoy, nmonth):
         """
         f.write(input_1 + '\n')
 
-        f.write('\\title{ESTADO DE CUENTA: %s.2016}\n'%(Info.month[-1]))
+        f.write('\\title{ESTADO DE CUENTA: %s.2016}\n'%(Info.all_months[-1]))
         f.write('\\author{%s}\n'%(Person.full_name))
         f.write('\\email[Contacto:~]{%s}\n'%(Person.email))
 
@@ -81,7 +89,7 @@ def make_latex(Person, Info, dir, hoy, nmonth):
 
 Estado de cuenta correspondiente hasta  el %s-%s del 2016, considerando una
 tasa de inter\\'es del %.1f\%% anual.\n
-        """%(hoy, nmonth, Person.perct*100*12)
+        """%(today, month_name, Person.perct*100*12)
         f.write(input_2 + '\n\n')
 
 
@@ -99,10 +107,10 @@ Fecha de transacci\\'on  \qquad \qquad & Monto \qquad \qquad&  \qquad \qquad Int
         f.write(input_3 + '\n\n')
 
 
-        if len(Info.months) > 1:
+        if len(Info.all_months) > 1:
             input_4 = """
 $\leftarrow$ %s/16'  \qquad \qquad & \$%.2f MXN     & \qquad \qquad  \$%.2f MXN & \qquad \qquad   \$%.2f MXN   \\\\
-            """%(Info.month[-1], Info.final[-2], Info.cumul_inter[-1], Info.final[-2] + Info.cumul_inter[-1])
+            """%(Info.all_months[-1], Info.final[-2], Info.cumul_inter[-1], Info.final[-2] + Info.cumul_inter[-1])
             f.write(input_4 + '\n\n')
 
             Info.kk = Info.kk + 1           #need to check the reason of this
@@ -139,7 +147,7 @@ Derecha: monto total acumulado en la cuenta hasta  el %s-%s-2016.}
 \end{center}
 \end{figure}
 
-        """%(Person.name, Info.months[-1], nmonth, hoy, nmonth)
+        """%(Person.name, Info.all_months[-1], month_name, today, month_name)
         f.write(input_7+'\n')
 
         f.write("\centering {Anual   \qquad \qquad Deposito \qquad \qquad Inter\\'es acumulado \qquad  \qquad Total \qquad \qquad \hspace{2cm}}\\\\  \n")

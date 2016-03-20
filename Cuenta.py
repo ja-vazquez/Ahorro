@@ -13,45 +13,47 @@ print 'Add projections for the end of the year'
 print 'i.e. if you keep that amount you\'ll geg ? at the end of the year'
 
     #Information about people
-Make_plot = True
-Edo_cuenta= True
-month     = ['Feb','Mar']
+Make_plot  = True
+Edo_cuenta = True
+months     = ['Feb','Mar']
 
 
 
     #Up to which date
-today = datetime.date.today()
-hoy   = int(today.strftime('%d'))
+full_date   = datetime.date.today()
 
-abb_month = today.strftime("%b")
-nmonth    = month_spanish(abb_month)
+today       = int(full_date.strftime('%d'))
+month_abbr  = full_date.strftime("%b")
+this_month  = traslation(month_abbr)
 
 
     #Select a particular person
-if len(sys.argv) > 1 :
-    Person = eval(sys.argv[1])()
-else:
-    sys.exit("** Error: Write person's name")
-
+try:
+    if len(sys.argv) > 1 :
+        Person = eval(sys.argv[1])()
+    else:
+        call_error()
+except:
+    call_error()
 
 
     #Read its deposit file
-dir  = 'Investors/' + Person.name
-file = '/' + dir + '/' + Person.name + '_Res_depos.txt'
-directory = os.path.dirname(os.path.realpath(__file__))
+dir          = 'Investors/' + Person.name
+file         = '/' + dir + '/' + Person.name + '_Res_depos.txt'
+directory    = os.path.dirname(os.path.realpath(__file__))
 dates, depos = read_file(directory + file)
 
 
 
     #Perform the calculation of total interest
-Info = Calculation(Person, month, dates, depos)
-Info.interest(hoy)
+Info = Calculation(Person, months, dates, depos)
+Info.interest(today)
 Info.total()
 
 
     #Create folder to put files
 commd = """ mkdir %s/%s
-"""%(dir, Info.months[-1])
+"""%(dir, Info.all_months[-1])
 os.system(commd)
 
 
@@ -61,24 +63,24 @@ if  Make_plot:
     gs  = gridspec.GridSpec(1, 2, width_ratios= [3, 2.5])
 
     make_plot(plt.subplot(gs[0]), Info.dates, Info.depos,
-          title = 'Depositos realizados',
-          legend= 'Depositado = $%5.2f'%(Info.sum_tot_depos[-1]),
-          ylabel= 'Depositos (MXN)')
+          title  = 'Depositos realizados',
+          legend = 'Depositado = $%5.2f'%(Info.sum_tot_depos[-1]),
+          ylabel = 'Depositos (MXN)')
 
-    make_plot(plt.subplot(gs[1]), Info.months, Info.final, color='Magenta',
-          title = 'Total acumulado',
-          legend= 'Total = $%5.2f'%(Info.final[-1]),
-          ylabel= 'Total (MXN)',
+    make_plot(plt.subplot(gs[1]), Info.all_months, Info.final, color='Magenta',
+          title  = 'Total acumulado',
+          legend = 'Total = $%5.2f'%(Info.final[-1]),
+          ylabel = 'Total (MXN)',
           extra_yinfo= Info.sum_tot_depos, extra_color='DodgerBlue')
 
     plt.subplots_adjust(wspace=0.4)
-    pylab.savefig(dir + '/' + Info.months[-1]+'/'+'Plots_' + Person.name + '_' + Info.months[-1] + ".pdf")
+    pylab.savefig(dir + '/' + Info.all_months[-1] + '/' + 'Plots_' + Person.name + '_' + Info.all_months[-1] + ".pdf")
     plt.show()
 
 
     #Lates is next
 if Edo_cuenta:
-    make_latex(Person, Info, dir, hoy, nmonth)
+    make_latex(Person, Info, dir, today, this_month)
 
 
     #Run everything
@@ -88,6 +90,6 @@ if Edo_cuenta:
     pdflatex Edo_%s_%s.tex
     open -a Preview Edo_%s_%s.pdf
     rm *aux *log *out
-    """%(dir, month[-1], Person.name, month[-1], Person.name, month[-1])
+    """%(dir, Info.all_months[-1], Person.name, Info.all_months[-1], Person.name, Info.all_months[-1])
     os.system(command)
 

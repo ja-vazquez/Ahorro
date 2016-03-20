@@ -4,26 +4,25 @@ from People import *
 import numpy as np
 
 class Calculation:
-    def __init__(self, Person, month, dates, depos):
-        self.month   = month
+    def __init__(self, Person, months, dates, depos):
+        self.person  = Person
+        self.months  = months
         self.dates   = dates
         self.depos   = depos
-        self.person  = Person
-        self.months  = self.person.months + self.month
+        self.all_months  = self.person.init_month + self.months
 
 
 
-    def interest(self, hoy):
-        self.lmonths = len(self.months)
+    def interest(self, today):
+        self.today   = today
+        self.lmonths = len(self.all_months)
         self.ldates  = len(self.dates)
 
-        percentage= np.zeros(self.ldates)
         interes   = np.zeros(self.ldates)
         deposito  = np.zeros(self.ldates)
 
         tot_depos = np.zeros(self.lmonths)
         tot_inter = np.zeros(self.lmonths)
-        lfraction = np.zeros(self.lmonths)
 
 
         i, k  = 0, 0
@@ -32,17 +31,16 @@ class Calculation:
             deposito[l] = float(self.depos[l])
 
                 #fraction of the percentage depending on the deposit day
-            if self.month[-1] == self.dates[l][3:]:
-                fraction   =  (hoy - float(self.dates[l][:2]))/30.
+            if self.all_months[-1] == self.dates[l][3:]:
+                fraction   =  (self.today - float(self.dates[l][:2]))/30.
             else:
                 fraction   =  (30 - float(self.dates[l][:2]))/30.
 
-            percentage[l] = fraction*self.person.perct
-            interes[l]    = deposito[l]*percentage[l]
 
+            interes[l] = deposito[l]*fraction*self.person.perct
 
                 #account per month
-            if self.months[i] in self.dates[l][3:]:
+            if self.all_months[i] in self.dates[l][3:]:
                 tot_depos[i] += deposito[l]
                 tot_inter[i] += interes[l]
                 k += 1
@@ -54,9 +52,7 @@ class Calculation:
 
 
         self.kk        = k
-        self.hoy       = hoy
         self.interes   = interes
-        self.depos     = deposito
         self.tot_depos = tot_depos
         self.tot_inter = tot_inter
 
@@ -64,10 +60,10 @@ class Calculation:
 
 
     def total(self):
-        sum_tot_depos = np.zeros(self.lmonths)
-        sum_tot_inter = np.zeros(self.lmonths)
-        cumul_inter   = np.zeros(self.lmonths)
-        final         = np.zeros(self.lmonths)
+        self.sum_tot_depos = np.zeros(self.lmonths)
+        self.sum_tot_inter = np.zeros(self.lmonths)
+        self.cumul_inter   = np.zeros(self.lmonths)
+        self.final         = np.zeros(self.lmonths)
 
         tmp1, tmp2, cumul = 0, 0, 0
 
@@ -75,21 +71,16 @@ class Calculation:
             tmp1            += self.tot_depos[i]
             tmp2            += self.tot_inter[i]
 
-            sum_tot_depos[i]+= tmp1
-            sum_tot_inter[i]+= tmp2
+            self.sum_tot_depos[i]+= tmp1
+            self.sum_tot_inter[i]+= tmp2
 
             #fraction of the month
-            tmp3 = (self.hoy -1.)/30. if i==(self.lmonths-1) else 1
+            frac = (self.today -1.)/30. if i==(self.lmonths-1) else 1
 
-            cumul_inter[i]  = 0 if i==0 else sum_tot_depos[i-1]*self.person.perct*tmp3
-            final[i]      = tmp1 + tmp2 + cumul_inter.sum()
+            self.cumul_inter[i]  = 0 if i==0 else self.sum_tot_depos[i-1]*self.person.perct*frac
+            self.final[i]      = tmp1 + tmp2 + self.cumul_inter.sum()
 
 
-
-        self.sum_tot_depos = sum_tot_depos
-        self.sum_tot_inter = sum_tot_inter
-        self.cumul_inter   = cumul_inter
-        self.final         = final
 
 
 
