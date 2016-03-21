@@ -1,5 +1,12 @@
 #!/usr/bin/python
 
+def msge():
+    text = """Edo de cuenta correspondiente al mes de %s
+
+                Saludos
+                JaV"""
+    return text
+
 def mail(to, subject, text, attach, gmail_pwd):
 
    import smtplib
