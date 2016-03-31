@@ -4,6 +4,7 @@ import os, sys
 import datetime
 from People import *
 from Useful import *
+from send_info import *
 from Calculation import *
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
@@ -15,6 +16,7 @@ print 'i.e. if you keep that amount you\'ll geg ? at the end of the year'
     #Information about people
 Make_plot  = True
 Edo_cuenta = True
+Send_mail  = True
 months     = ['Feb','Mar']
 
 
@@ -92,4 +94,11 @@ if Edo_cuenta:
     rm *aux *log *out
     """%(dir, Info.all_months[-1], Person.name, Info.all_months[-1], Person.name, Info.all_months[-1])
     os.system(command)
+
+
+    #Send mails from google account
+if Send_mail:
+    to = Person.email
+    pdf_file = "%s/%s/Edo_%s_%s.pdf"%(dir, Info.all_months[-1], Person.name, Info.all_months[-1])
+    mail(to, 'Edo de cuenta', msge(), pdf_file, 'pswd')
 
