@@ -17,7 +17,7 @@ def mail(to, subject, text, attach, gmail_pwd):
    import os
 
 
-   gmail_user = "my_gmail@gmail.com"
+   gmail_user = "jvetovazquez@gmail.com"
    msg = MIMEMultipart()
 
    msg['From'] = gmail_user
