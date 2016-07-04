@@ -1,4 +1,4 @@
-##I'll add stuff later
+Trial script to help managing saving from friends.
 
 
-![](https://github.com/ja-vazquez/GM_Sampler/blob/master/ring.jpg)
+![](https://github.com/ja-vazquez/Ahorro/blob/master/2015.jpg)

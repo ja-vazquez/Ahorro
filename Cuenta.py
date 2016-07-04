@@ -17,7 +17,7 @@ print 'i.e. if you keep that amount you\'ll geg ? at the end of the year'
 Make_plot  = True
 Edo_cuenta = True
 Send_mail  = False
-months     = ['Feb','Mar', 'Apr', 'May']
+months     = ['Feb','Mar', 'Apr', 'May','Jun','Jul']
 
 
 
