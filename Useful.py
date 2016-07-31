@@ -3,8 +3,20 @@ import csv
 import os, sys
 import pylab
 import numpy as np
+import pandas as pd
 from People import *
 import matplotlib.pyplot as plt
+pd.set_option('display.mpl_style', 'default')
+
+params1 = {'backend': 'pdf',
+               'axes.labelsize': 12,
+               'text.fontsize': 16,
+               'xtick.labelsize': 18,
+               'ytick.labelsize': 18,
+               'legend.fontsize': 16,	
+               'lines.markersize': 16,
+               'font.size': 16,}
+pylab.rcParams.update(params1)
 
 
 def call_error():
@@ -25,14 +37,8 @@ def traslation(mon):
 
 
 def read_file(name):
-    with open(name, 'rb') as f:
-        reader = csv.DictReader(f , delimiter='\t')
-        dates, depos = [], []
-        for row in reader:
-            dates.append(row['Date'])
-            depos.append(float(row['Deposito']))
-
-        return dates, depos
+    """Read depos file"""
+    return pd.read_csv(name, sep='\s', skiprows=[0], names=['Dates', 'Deposits'])
 
 
 
@@ -52,12 +58,13 @@ def make_plot(ax, xinfo, yinfo, color='lime', legend="legend",
     pylab.xticks([bar_width*2. + n for n in range(lxinfo)], ([xinfo[n] for n in range(lxinfo)]))
 
     ax.legend(([legend]), frameon=False, fontsize='x-large')
+    ax.set_xticklabels(ax.xaxis.get_majorticklabels(), rotation=45)
     ax.set_ylabel(ylabel, size=20)
     ax.set_xlabel(xlabel, size=18)
     ax.set_title(title)
-
-    pylab.ylim([0, np.array(yinfo).max()*1.2])
     ax.grid()
+    pylab.ylim([0, np.array(yinfo).max()*1.2])
+    
 
 
 
@@ -139,7 +146,7 @@ $\leftarrow$ %s/16'  \qquad \qquad & \$%.2f MXN     & \qquad \qquad  \$%.2f MXN 
 
 \\begin{figure}[h!]
 \\begin{center}
-\\includegraphics[trim = 1mm 1mm 1mm 1mm, clip, width=13cm, height=8cm]{Plots_%s_%s.pdf}
+\\includegraphics[trim = 1mm -2mm 1mm 10mm, clip, width=14cm, height=8cm]{Plots_%s_%s.pdf}
 
 \caption{Izquierda: dep\\'ositos realizados hasta %s-2016.
 Derecha: monto total acumulado en la cuenta hasta  el %s-%s-2016.}

@@ -4,6 +4,8 @@ import os, sys
 import datetime
 from People import *
 from Useful import *
+import datetime as dt
+import pandas as pd
 from send_info import *
 from Calculation import *
 import matplotlib.pyplot as plt
@@ -14,19 +16,19 @@ print 'Add projections for the end of the year'
 print 'i.e. if you keep that amount you\'ll geg ? at the end of the year'
 
     #Information about people
-Make_plot  = True
-Edo_cuenta = True
+Make_plot  = False
+Edo_cuenta = False
 Send_mail  = False
 months     = ['Feb','Mar', 'Apr', 'May','Jun','Jul']
 
 
 
     #Up to which date
-full_date   = datetime.date.today()
+today_date  = datetime.date.today()
 
-today       = int(full_date.strftime('%d'))
-month_abbr  = full_date.strftime("%b")
-this_month  = traslation(month_abbr)
+#today_day   = int(today_date.strftime('%d'))
+today_month = today_date.strftime("%b")
+today_month_name  = traslation(today_month)
 
 
     #Select a particular person
@@ -40,17 +42,19 @@ except:
 
 
     #Read its deposit file
-dir          = 'Investors/' + Person.name
-file         = '/' + dir + '/' + Person.name + '_Res_depos.txt'
-directory    = os.path.dirname(os.path.realpath(__file__))
-dates, depos = read_file(directory + file)
+dir        = 'Investors/' + Person.name
+file_name  = '/' + dir + '/' + Person.name + '_Res_depos.txt'
+directory  = os.path.dirname(os.path.realpath(__file__))
 
-
+file_deposits  = read_file(directory + file_name)
 
     #Perform the calculation of total interest
-Info = Calculation(Person, months, dates, depos)
-Info.interest(today)
-Info.total()
+Info = Calculation(Person, months, file_deposits)
+Info.calcu_interest(today_date)
+
+#Info = Calculation(Person, months, dates, depos)
+#Info.interest(today)
+#Info.total()
 
 
     #Create folder to put files
@@ -61,7 +65,7 @@ os.system(commd)
 
     #Now we produce some plots
 if  Make_plot:
-    fig = plt.figure(figsize = (12, 7))
+    fig = plt.figure(figsize = (14, 12))
     gs  = gridspec.GridSpec(1, 2, width_ratios= [3, 2.5])
 
     make_plot(plt.subplot(gs[0]), Info.dates, Info.depos,
