@@ -1,19 +1,16 @@
 
-import csv
-import os, sys
+import sys
 import pylab
-import numpy as np
 import pandas as pd
-from People import *
 import matplotlib.pyplot as plt
 pd.set_option('display.mpl_style', 'default')
 
 params1 = {'backend': 'pdf',
-               'axes.labelsize': 12,
-               'text.fontsize': 16,
+               'axes.labelsize': 15,
+               'text.fontsize': 18,
                'xtick.labelsize': 18,
                'ytick.labelsize': 18,
-               'legend.fontsize': 16,	
+               'legend.fontsize': 18,
                'lines.markersize': 16,
                'font.size': 16,}
 pylab.rcParams.update(params1)
@@ -26,6 +23,7 @@ def call_error():
              "-------------------")
 
 
+
 def traslation(mon):
     month_spa = {'Jan':'Enero', 'Feb':'Febrero',
                  'Mar':'Marzo', 'Apr':'Abril', 'May':'Mayo',
@@ -36,42 +34,35 @@ def traslation(mon):
 
 
 
+
 def read_file(name):
     """Read depos file"""
-    return pd.read_csv(name, sep='\s', skiprows=[0], names=['Dates', 'Deposits'])
+    file= pd.read_csv(name, sep='\s', skiprows=[0], names=['Dates', 'Deposits'])
+    return file
 
 
 
-def make_plot(ax, xinfo, yinfo, color='lime', legend="legend",
-              ylabel='ylabel', xlabel='Fecha', title="title",
-              extra_yinfo=None, extra_color='red'):
+def make_plot(ax, Info_df, ylim, color='LimeGreen', label=None,
+              ylabel='ylabel', xlabel='Fecha', title="title"):
 
-    opacity, bar_width = 1.0, 0.5
-    spc = bar_width/2.0
-    lxinfo = len(xinfo)
+    df = Info_df
+    df.plot.bar(color=color, label=label,
+                stacked=True, alpha=0.8, ax=ax)
 
-    for l in range(lxinfo):
-        plt.bar(spc + bar_width, yinfo[l], bar_width, color=color, alpha=opacity)
-        if extra_yinfo is not None:
-            plt.bar(spc + bar_width, extra_yinfo[l], bar_width, color=extra_color, alpha= opacity)
-        spc += 2.*bar_width
-    pylab.xticks([bar_width*2. + n for n in range(lxinfo)], ([xinfo[n] for n in range(lxinfo)]))
-
-    ax.legend(([legend]), frameon=False, fontsize='x-large')
-    ax.set_xticklabels(ax.xaxis.get_majorticklabels(), rotation=45)
+    plt.legend(loc='best', frameon=True)
+    plt.ylim(ymax=  ylim)
+    ax.set_title(title)
     ax.set_ylabel(ylabel, size=20)
     ax.set_xlabel(xlabel, size=18)
-    ax.set_title(title)
-    ax.grid()
-    pylab.ylim([0, np.array(yinfo).max()*1.2])
-    
 
 
 
-def make_latex(Person, Info, dir, today, month_name):
-    with open('%s/%s/Edo_%s_%s.tex'%(dir, Info.all_months[-1], Person.name, Info.all_months[-1]), 'w') as f:
 
-        input_1 = """
+def make_latex(Person, Info, directory, today_day, today_month_name):
+    #Latex has some problems with .format style
+    with open('{0}/{1}/Edo_{2}_{1}.tex'.format(directory, Info.total_months[-1], Person.name), 'w') as f:
+
+        Latex_text_1 = """
 \documentclass[11pt,secnumarabic,nofootinbib,preprintnumbers,amsmath,amssymb,aps]{revtex4}
 \usepackage[usenames]{color}
 \usepackage{graphicx}
@@ -83,24 +74,26 @@ def make_latex(Person, Info, dir, today, month_name):
 \def\\blue{\\textcolor{blue}}
 \\begin{document}
         """
-        f.write(input_1 + '\n')
+        f.write(Latex_text_1  + '\n')
 
-        f.write('\\title{ESTADO DE CUENTA: %s.2016}\n'%(Info.all_months[-1]))
+        f.write('\\title{ESTADO DE CUENTA: %s.2016}\n'%(traslation(Info.total_months[-1])))
         f.write('\\author{%s}\n'%(Person.full_name))
         f.write('\\email[Contacto:~]{%s}\n'%(Person.email))
 
 
-        input_2 = """
-\date{\\today}\n
+
+        Latex_text_2 = """
+%%\date{\\today}\n
 \maketitle\n
 
 Estado de cuenta correspondiente hasta  el %s-%s del 2016, considerando una
 tasa de inter\\'es del %.1f\%% anual.\n
-        """%(today, month_name, Person.perct*100*12)
-        f.write(input_2 + '\n\n')
+        """%(today_day, today_month_name, Person.perct*100*365)
+        f.write(Latex_text_2 + '\n\n')
 
 
-        input_3 = """
+
+        Latex_text_3 = """
 \\begin{table}[h!]
 \\begin {center}
 \\begin{tabular}{rccl}
@@ -111,32 +104,44 @@ Fecha de transacci\\'on  \qquad \qquad & Monto \qquad \qquad&  \qquad \qquad Int
 \hline
 \\vspace{0.1cm}
         """
-        f.write(input_3 + '\n\n')
+        f.write(Latex_text_3 + '\n\n')
 
 
-        if len(Info.all_months) > 1:
-            input_4 = """
+
+        if len(Info.total_months) > 1:
+            Latex_text_4 = """
 $\leftarrow$ %s/16'  \qquad \qquad & \$%.2f MXN     & \qquad \qquad  \$%.2f MXN & \qquad \qquad   \$%.2f MXN   \\\\
-            """%(Info.all_months[-1], Info.final[-2], Info.cumul_inter[-1], Info.final[-2] + Info.cumul_inter[-1])
-            f.write(input_4 + '\n\n')
+            """%(Info.total_months[-1], Info.group_monthly['cum_depos'][-2],
+                 Info.group_monthly['cum_interest'][-2], Info.group_monthly['cum_total'][-2],)
+            f.write(Latex_text_4 + '\n\n')
 
-            Info.kk = Info.kk + 1           #need to check the reason of this
 
-        for n in range(Info.kk, 0, -1):
-            input_5 = """
+
+        # for the last month
+        num_depos = Info.group_monthly['num_deposits'][-1]
+        for n in range(num_depos, 0, -1):
+            date_of_deposit = Info.df_deposits.iloc[-n]['Dates']
+            deposits = Info.df_deposits.iloc[-n]['Deposits']
+            interest = Info.df_deposits.iloc[-n]['tot_interest']
+            total    = Info.df_deposits.iloc[-n]['total']
+            Latex_text_5 = """
 %s/16'  \qquad  \qquad  & \$%.2f MXN   & \qquad \qquad  \$%.2f MXN & \qquad \qquad   \$%.2f MXN      \\\\
-            """%(Info.dates[-n], Info.depos[-n], Info.interes[-n], Info.depos[-n] + Info.interes[-n])
-            f.write(input_5 + '\n\n')
+            """%(date_of_deposit, deposits, interest, total)
+            f.write(Latex_text_5 + '\n\n')
 
 
-        input_6 = """
+
+
+        Latex_text_6 = """
 \hline
 -                       \qquad  \qquad  &- & \qquad \qquad - & \qquad \qquad    \color{blue}{= \$ \\bf %.2f MXN}     \\\\
-        """%(Info.final[-1])
-        f.write(input_6 + '\n\n')
+        """%(Info.group_monthly['cum_total'][-1])
+        f.write(Latex_text_6 + '\n\n')
 
 
-        input_7 = """
+
+
+        Latex_text_7 = """
 \hline
 \hline
 \end{tabular}
@@ -146,7 +151,7 @@ $\leftarrow$ %s/16'  \qquad \qquad & \$%.2f MXN     & \qquad \qquad  \$%.2f MXN 
 
 \\begin{figure}[h!]
 \\begin{center}
-\\includegraphics[trim = 1mm -2mm 1mm 10mm, clip, width=14cm, height=8cm]{Plots_%s_%s.pdf}
+\\includegraphics[trim = 1mm -2mm 1mm 1mm, clip, width=14cm, height=9cm]{Plots_%s_%s.pdf}
 
 \caption{Izquierda: dep\\'ositos realizados hasta %s-2016.
 Derecha: monto total acumulado en la cuenta hasta  el %s-%s-2016.}
@@ -154,13 +159,13 @@ Derecha: monto total acumulado en la cuenta hasta  el %s-%s-2016.}
 \end{center}
 \end{figure}
 
-        """%(Person.name, Info.all_months[-1], month_name, today, month_name)
-        f.write(input_7+'\n')
+        """%(Person.name, Info.total_months[-1], today_month_name, today_day, today_month_name)
+        f.write(Latex_text_7 +'\n')
 
         f.write("\centering {Anual   \qquad \qquad Deposito \qquad \qquad Inter\\'es acumulado \qquad  \qquad Total \qquad \qquad \hspace{2cm}}\\\\  \n")
 
-        f.write("\centering {2016: \qquad  \\fbox{\qquad   \$ %5.2f \qquad  ,\qquad   \$ %5.2f \qquad ,\qquad    \$ %5.2f \qquad}}\\\\ \n"%(
-            Info.sum_tot_depos[-1], Info.final[-1] - Info.sum_tot_depos[-1], Info.final[-1]))
+        f.write("\centering {2016: \qquad  \\fbox{\qquad   \$ %5.2f \qquad  ,\qquad   \$ %5.2f \qquad ,\qquad    \$ %5.2f \qquad}}\\\\ "%(
+            Info.group_monthly['cum_depos'][-1], Info.group_monthly['cum_interest'][-1], Info.group_monthly['cum_total'][-1]))
 
 
         if Person.depos_2015 != 0:
@@ -169,11 +174,6 @@ Derecha: monto total acumulado en la cuenta hasta  el %s-%s-2016.}
 
 
         f.write('\end{document}')
-
-
-
-
-
 
 
 

@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
-def msge():
-    text = """Edo de cuenta correspondiente al mes de %s
+def msge(mes):
+    text = """Edo de cuenta correspondiente al mes de %s 2016.
 
                 Saludos
-                JaV"""
+                JaV \n\n"""%(mes)
     return text
 
 def mail(to, subject, text, attach, gmail_pwd):
