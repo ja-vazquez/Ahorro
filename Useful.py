@@ -58,9 +58,10 @@ def make_plot(ax, Info_df, ylim, color='LimeGreen', label=None,
 
 
 
-def make_latex(Person, Info, directory, today_day, today_month_name):
+def make_latex(Person, Info, dir_month, today_day, today_month_name):
     #Latex has some problems with .format style
-    with open('{0}/{1}/Edo_{2}_{1}.tex'.format(directory, Info.total_months[-1], Person.name), 'w') as f:
+    fname_month = Person.name + '_' + Info.total_months[-1]
+    with open('{0}/Edo_{1}.tex'.format(dir_month, fname_month), 'w') as f:
 
         Latex_text_1 = """
 \documentclass[11pt,secnumarabic,nofootinbib,preprintnumbers,amsmath,amssymb,aps]{revtex4}
@@ -151,7 +152,7 @@ $\leftarrow$ %s/16'  \qquad \qquad & \$%.2f MXN     & \qquad \qquad  \$%.2f MXN 
 
 \\begin{figure}[h!]
 \\begin{center}
-\\includegraphics[trim = 1mm -2mm 1mm 1mm, clip, width=14cm, height=9cm]{Plots_%s_%s.pdf}
+\\includegraphics[trim = 1mm -2mm 1mm 1mm, clip, width=14cm, height=9cm]{Plots_%s.pdf}
 
 \caption{Izquierda: dep\\'ositos realizados hasta %s-2016.
 Derecha: monto total acumulado en la cuenta hasta  el %s-%s-2016.}
@@ -159,7 +160,7 @@ Derecha: monto total acumulado en la cuenta hasta  el %s-%s-2016.}
 \end{center}
 \end{figure}
 
-        """%(Person.name, Info.total_months[-1], today_month_name, today_day, today_month_name)
+        """%(fname_month, today_month_name, today_day, today_month_name)
         f.write(Latex_text_7 +'\n')
 
         f.write("\centering {Anual   \qquad \qquad Deposito \qquad \qquad Inter\\'es acumulado \qquad  \qquad Total \qquad \qquad \hspace{2cm}}\\\\  \n")
