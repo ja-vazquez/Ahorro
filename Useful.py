@@ -17,7 +17,7 @@ pylab.rcParams.update(params1)
 
 
 def call_error():
-    print ''
+    print ('')
     sys.exit(" ------------------"
              " Error: Write person's name "
              "-------------------")
@@ -63,18 +63,18 @@ def make_latex(Person, Info, dir_month, today_day, today_month_name):
     fname_month = Person.name + '_' + Info.total_months[-1]
     with open('{0}/Edo_{1}.tex'.format(dir_month, fname_month), 'w') as f:
 
-        Latex_text_1 = """
+        Latex_text_1 = r"""
 \documentclass[11pt,secnumarabic,nofootinbib,preprintnumbers,amsmath,amssymb,aps]{revtex4}
 \usepackage[usenames]{color}
 \usepackage{graphicx}
 \usepackage{ulem}
 \usepackage{hyperref}
 
-\\frenchspacing
+\frenchspacing
 \def\\red{\\textcolor{red}}
 \def\\blue{\\textcolor{blue}}
-\\begin{document}
-        """
+\begin{document}
+	"""
         f.write(Latex_text_1  + '\n')
 
         f.write('\\title{ESTADO DE CUENTA: %s.2016}\n'%(traslation(Info.total_months[-1])))

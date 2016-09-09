@@ -10,20 +10,20 @@ import matplotlib.pyplot as plt
 from matplotlib import gridspec
 
 
-print 'Add projections for the end of the year'
-print 'i.e. if you keep that amount you\'ll geg ? at the end of the year'
+print ('Add projections for the end of the year')
+print ('i.e. if you keep that amount you\'ll geg ? at the end of the year')
 
     #Information about people
 Make_plot  = True
 Run_latex  = True
 Edo_cuenta = True
-months     = ['Jul']
+months     = ['Jul', 'Aug', 'Sep']
 
 
 
     #Up to which date
-#today_date  = datetime.date.today()
-today_date  = datetime.date(2016,07,31)
+today_date  = datetime.date.today()
+#today_date  = datetime.date(2016,07,31)
 
 today_day   = int(today_date.strftime('%d'))
 today_month = today_date.strftime("%b")
@@ -89,7 +89,7 @@ if Make_plot:
     plt.subplots_adjust(wspace=0.4)
     pylab.savefig(dir_month + '/' + 'Plots_' + Person.name + '_'
                             + Calc.total_months[-1] + ".pdf")
-    plt.show(block=True)
+    #plt.show(block=True)
 
 
 
@@ -111,11 +111,11 @@ if Edo_cuenta:
 
 
 #Send mails from google account
-enviar_mail = raw_input("Enviar mail? (yes/no) ")
+enviar_mail = input("Enviar mail? (yes/no) ")
 
 if enviar_mail == 'yes':
     passw = raw_input("Enter password :")
     to = Person.email
     pdf_file = "{0}/Edo_{1}.pdf".format(dir_month, fname_month)
     mail(to, 'Edo de cuenta %s'%(Calc.total_months[-1]), msge(Calc.total_months[-1]), pdf_file, passw)
-    print 'Mail enviado a', Person.email
+    print ('Mail enviado a', Person.email)

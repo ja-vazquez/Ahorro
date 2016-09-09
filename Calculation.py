@@ -51,5 +51,5 @@ class Calculation:
         self.group_monthly.index.name      = 'Months'
 
 
-        print self.group_monthly #.loc['Jan']['Deposits']
+        print (self.group_monthly) #.loc['Jan']['Deposits'])
         #print self.df_deposits
