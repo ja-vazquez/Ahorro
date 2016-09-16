@@ -1,5 +1,6 @@
 
 import os, sys
+import datetime
 import pandas as pd
 import matplotlib.pylab as plt
 from matplotlib import gridspec
@@ -8,6 +9,9 @@ month = 'Sep'
 dt =[]
 df = pd.read_csv('inv_names.csv',names=['names'])
 inv_names = df['names'].tolist()
+
+today_date  = datetime.date.today()
+today_day   = str(today_date.strftime('%d'))
 
 #bursa = 93522.7
 bursa =float( input("Bursanet total: "))
@@ -46,8 +50,8 @@ if True:
  ser.plot(kind = 'bar', ax=ax2, label = 'Bursa: %.2f \n Total: %.2f'%(ser['bursa'], ser['cum_total']))
  plt.legend(loc='lower center')
  plt.title('Total = %.2f'%(ser['bursa'] - ser['cum_total']))
- plt.savefig('Investors/Yo/'+month+'/Final_Yo_' + month + '.pdf')
+ plt.savefig('Investors/Yo/'+month+'/Final_Yo_' + month + '_' + today_day + '.pdf')
  #plt.show()
  
- commd = 'Investors/Yo/'+month+'/Final_Yo_' + month + '.pdf'
+ commd = 'Investors/Yo/'+month+'/Final_Yo_' + month + '_' + today_day + '.pdf'
  os.system("open -a Preview %s"%(commd))

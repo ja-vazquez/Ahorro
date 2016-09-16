@@ -111,7 +111,7 @@ if Edo_cuenta:
 
 
 #Send mails from google account
-enviar_mail = input("Enviar mail? (yes/no) ")
+enviar_mail = raw_input("Enviar mail? (yes/no) ")
 
 if enviar_mail == 'yes':
     passw = raw_input("Enter password :")
