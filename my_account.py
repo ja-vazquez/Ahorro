@@ -40,24 +40,31 @@ os.system(commd)
 
 ser.to_csv('Investors/Yo/'+month+'/Final_Yo_'+ month+'.csv')
 
+result['tot_perc'] =  result[['cum_total']]/result[['cum_total']].sum()*100
 
 if True:
- fig = plt.figure(figsize = (10, 6))
- gs  = gridspec.GridSpec(1, 2, width_ratios= [3, 2.5])
+ fig = plt.figure(figsize = (15, 6))
+ gs  = gridspec.GridSpec(1, 3, width_ratios= [2, 2, 3])
 
  ax1= plt.subplot(gs[0])
- result[['cum_depos', 'cum_total']].plot(kind = 'bar', ax=ax1)
+ result['cum_total'].plot(kind = 'bar', ax=ax1, color='orange')
  plt.title('Investors: %.1f,  Avail: %.1f'%(result[['cum_total']].sum(), avail))
- #print (result)
 
- ax2= plt.subplot(gs[1])
- ser['investors']= ser['bursa']-ser['cum_total']
- ser['interests']= result.ix['Yo']['cum_interest']
- ser[['investors', 'interests']].plot(kind = 'bar', ax=ax2, label = 'Bursa: %.1f \n Yo:            %.1f :  %.2f %% \n Investors: %.1f :   %.2f %%'
-                            %(ser['bursa'], result.ix['Yo']['cum_interest'], result.ix['Yo']['cum_interest']/result.ix['Yo']['cum_depos']*100,
-		              ser['bursa']- ser['cum_total'], (ser['bursa'] - ser['cum_total'])/result[['cum_depos']].sum()*100)) 
- plt.legend(loc='best')
- plt.title('Total = %.1f'%(ser['bursa']- ser['cum_total'] + result.ix['Yo']['cum_interest']))
+
+ ax3= plt.subplot(gs[1])
+ result['cum_interest'].plot(kind = 'bar', ax=ax3, color='g')
+ plt.title('Interests')
+
+ ax2= plt.subplot(gs[2])
+ ser['investors'] = ser['bursa']-ser['cum_total']
+ ser['interests'] = result.ix['Yo']['cum_interest']
+ ser[['investors', 'interests']].plot(kind = 'barh', ax=ax2, label = 'Yo:            %.1f :  %.2f %% \n Investors: %.1f :   %.2f %%'
+                            %(result.ix['Yo']['cum_interest'], result.ix['Yo']['cum_interest']/result.ix['Yo']['cum_depos']*100,
+                              ser['bursa']- ser['cum_total'], (ser['bursa'] - ser['cum_total'])/result[['cum_depos']].sum()*100))
+ plt.legend(loc='upper right')
+ ax2.axvline(0, color='b', linestyle='-')
+ plt.legend(frameon=False)
+ plt.title('Bursa:  %.1f, Total = %.1f'%(ser['bursa'], ser['bursa']- ser['cum_total'] + result.ix['Yo']['cum_interest']))
  plt.savefig('Investors/Yo/'+month+'/Final_Yo_' + month + '_' + today_day + '.pdf')
  #plt.show()
  

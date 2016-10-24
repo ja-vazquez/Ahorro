@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python
 import os,sys
 import pandas as pd
 
@@ -13,5 +13,6 @@ commd = """
 python2.7 my_account.py
 cd ../Investing/
 python2.7 investing.py
-python2.7 investing.py e"""
+python2.7 investing.py e
+python2.7 total_inv.py"""
 os.system(commd)

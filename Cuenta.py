@@ -17,7 +17,7 @@ print ('i.e. if you keep that amount you\'ll geg ? at the end of the year')
 Make_plot  = True
 Run_latex  = True
 Edo_cuenta = True
-months     = ['Sep']
+months     = ['Sep','Oct']
 
 
 
