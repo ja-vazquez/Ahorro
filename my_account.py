@@ -13,7 +13,7 @@ inv_names = df['names'].tolist()
 today_date  = datetime.date.today()
 today_day   = str(today_date.strftime('%d'))
 
-dir = '/Users/josevazquezgonzalez/Desktop/TODOs/Finances/Investing/Bursanet/'
+dir = '/Users/josevazquezgonzalez/Desktop/Desktop_Jose/TODOs/Finances/Investing/Bursanet/'
 pd_bursa = pd.read_csv(dir + 'Investing.txt', skiprows=4, sep='\s+',
                        names=['dates', 'fees', 'money_in', 'total'])
 
