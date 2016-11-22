@@ -5,7 +5,7 @@ import pandas as pd
 import matplotlib.pylab as plt
 from matplotlib import gridspec
 
-month = 'Oct'
+month = 'Nov'
 dt =[]
 df = pd.read_csv('inv_names.csv',names=['names'])
 inv_names = df['names'].tolist()
@@ -29,10 +29,10 @@ result = pd.concat(dt)
 result['names'] = inv_names
 result.index =  result['names']
 
-
+print(result)
 ser = result[['cum_total']].sum()
 ser.set_value('bursa', bursa)
-print(ser)
+print(ser, 'depos', result[['cum_depos']], 'total', result[['cum_depos']].sum())
 avail = ser['bursa'] - result[['cum_total']].iloc[0:-1].sum()
 
 commd = """ mkdir Investors/Yo/%s"""%(month)

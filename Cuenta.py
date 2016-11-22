@@ -17,13 +17,13 @@ print ('i.e. if you keep that amount you\'ll geg ? at the end of the year')
 Make_plot  = True
 Run_latex  = True
 Edo_cuenta = True
-months     = ['Sep','Oct']
+months     = ['Nov']
 
 
 
     #Up to which date
 today_date  = datetime.date.today()
-#today_date  = datetime.date(2016,07,31)
+#today_date  = datetime.date(2016,11,22)
 
 today_day   = int(today_date.strftime('%d'))
 today_month = today_date.strftime("%b")

@@ -11,6 +11,7 @@ for inv in inv_names:
 
 commd = """
 python2.7 my_account.py
+python2.7 my_total.py
 cd ../Investing/
 python2.7 investing.py
 python2.7 investing.py e
