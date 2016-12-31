@@ -14,22 +14,11 @@ class Send_mail():
 
     
     def message(self):
-        text = """Edo de cuenta correspondiente al mes de {} 2016.
-
-		  Debido a la alta volatilidad que han presentado los diversos
-		  indices bursatiles en los ultimos meses, a la alza en las tasas
-		  de intereses, a la caida del peso frente al dolar, entre muchos otros eventos,
-		  la tasa de interes contemplada para las inversionde del 2017 sera del 13% anual. 
-		  
-		  Por otro lado, a partir del primero de Enero del 2017 existira 
-		  una couta del 0.3% del monto a retirar, esto es, por cada 1,000 MXN de retiro
-		  se hara un cargo de 3.0 MXN.
-
-		  Cualquier duda, sugerencia y/o aclaracion, por este medio seran 
-		  bienvenidas.
+        text = """Edo de cuenta correspondiente al mes de {} {}.
 
                     Saludos and Happy New Year!!
-                    JaV \n\n""".format(self.Calcul.Setts.month_name)
+                    JaV \n\n""".format(self.Calcul.Setts.month_name,
+				        self.Calcul.Setts.this_year)
         return text
                     
     
