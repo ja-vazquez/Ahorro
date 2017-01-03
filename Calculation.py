@@ -27,7 +27,8 @@ class Settings:
         self.dir_month   = self.directory + self.person + '/' + self.today_month + '/'
         self.file_month  = self.person + '_' + self.today_month 
         if not os.path.isdir(self.dir_month): os.system('mkdir {}'.format(self.dir_month))
-        
+       
+        self.invest_name = 'Investing.pdf'
         self.plot_name   = 'Plots_{}.pdf'.format(self.file_month)
         self.edo_name    = 'Edo_{}.csv'.format(self.file_month)
         self.file_finan  = 'Finances_{}.pdf'.format(self.file_month)

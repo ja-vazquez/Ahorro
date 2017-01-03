@@ -86,8 +86,8 @@ class Invest(Calculation):
 
 	fig.tight_layout()
         
-        plt.savefig('Investing.pdf')
-        os.system("open -a Preview Investing.pdf")
+        plt.savefig('%s'% self.Setts.invest_name)
+        os.system("open -a Preview %s"% self.Setts.invest_name)
         
         #plt.show(block=True)
         
