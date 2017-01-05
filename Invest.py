@@ -9,8 +9,8 @@ from matplotlib.dates import DateFormatter, WeekdayLocator, \
      MONDAY, MonthLocator
 
 class Invest(Calculation):
-    def __init__(self, person, today_date):
-        Calculation.__init__(self, person, today_date)
+    def __init__(self, person, today_date, invest):
+        Calculation.__init__(self, person, today_date, invest)
     
         
     def investing(self):
@@ -140,45 +140,49 @@ class Invest(Calculation):
         
         
 class Performance(Calculation):
-    def __init__(self, person, today_date):
-        Calculation.__init__(self, person, today_date)
-    
+    def __init__(self, person, today_date, invest):
+        Calculation.__init__(self, person, today_date, invest)
+   	self._invest = invest
+
     def perform(self):
-
-	file_2015  = self.Setts.bursa_2015
-        file_2016  = self.Setts.bursa_2016
 	file_bursa = self.Setts.bursa_dir + self.Setts.bursa_info
+	df_2017    = self.Rfiles.read_bursa(file_bursa)
 
-	df_2015    = self.Rfiles.read_bursa(file_2015)
-	df_2016    = self.Rfiles.read_bursa(file_2016)
-        df_2017    = self.Rfiles.read_bursa(file_bursa)
+	if self._invest == 'bursa':
+	   file_2015  = self.Setts.bursa_2015
+           file_2016  = self.Setts.bursa_2016
+
+	   df_2015    = self.Rfiles.read_bursa(file_2015)
+	   df_2016    = self.Rfiles.read_bursa(file_2016)
         
-        end_year_2015       = df_2015.total[-1] - df_2015.money_in[-1]
-	end_year_2016	    = df_2016.total[-1] - df_2016.money_in[-1]
+           end_year_2015       = df_2015.total[-1] - df_2015.money_in[-1]
+	   end_year_2016       = df_2016.total[-1] - df_2016.money_in[-1]
 
-        df_2016['money_in'] = df_2016.money_in - end_year_2015
-	df_2017['money_in'] = df_2017.money_in - end_year_2016 - end_year_2015
+           df_2016['money_in'] = df_2016.money_in - end_year_2015
+	   df_2017['money_in'] = df_2017.money_in - end_year_2016 - end_year_2015
 
-        result = pd.concat([df_2015, df_2016, df_2017])
+           result = pd.concat([df_2015, df_2016, df_2017])
 	
+   	else:
+	   result = df_2017
+
         result['earn'] = result.total - result.money_in
         result['perc'] = result.earn/result.money_in*100
         rolmean = pd.rolling_mean(result.earn, window=25)
-        #print result  
-        fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, figsize=(14, 10))
-        
-        avg_rate = (self.earn_rate(rolmean, -1) + self.earn_rate(rolmean, -2))/2.
+	avg_rate = (self.earn_rate(rolmean, -1) + self.earn_rate(rolmean, -2))/2.
 
-        result['earn'].plot(ax=ax1, color='c', label= 'Earn')
-        rolmean.plot(ax=ax1, color='y', label= 'Avg')
+	fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, figsize=(14, 10))
+        
+        result['earn'].plot(ax= ax1, color= 'c', label= 'Earn')
+        rolmean.plot(ax= ax1, color= 'y', label= 'Avg')
 	ax1.set_title('Deposits: %s,  total: %s, earn: %s, Percentage: %.1f %%, rate: %.1f p/month'%(
                     result.money_in[-1], result.total[-1],  result.earn[-1], result.perc[-1], avg_rate))
-        ax1.set_ylim(ymin=0)
-        ax1.axhline(end_year_2015, color='gray', linestyle='--')
-        ax1.axhline(end_year_2015 + end_year_2016, color='gray', linestyle='--')
+        ax1.set_ylim(ymin= 0)
+        ax1.axhline(end_year_2015, color= 'gray', linestyle= '--')
+        ax1.axhline(end_year_2015 + end_year_2016, color= 'gray', linestyle= '--')
 
-        result['perc'].plot(ax = ax2, ylim=(0, 40), label='Percentage')
-        ax2.axhline(15, color='gray', linestyle='--')
+        result['perc'].plot(ax= ax2, ylim= (0, 40), label='Percentage')
+        ax2.axhline(15, color= 'gray', linestyle= '--')
         
         
         result['total'].plot(ax=ax3, color='g', label='Total')

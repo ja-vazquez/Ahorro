@@ -6,7 +6,7 @@ from matplotlib import gridspec
 from collections import OrderedDict
 
 class Settings:
-    def __init__(self, _person, _today_date):
+    def __init__(self, _person, _today_date, _invest):
         self.person      = _person
         self.today_date  = _today_date
         self.today_day   = int(self.today_date.strftime('%d'))
@@ -17,8 +17,6 @@ class Settings:
 
 	self.retiro	 = 0.0025        
         self.directory   = 'Ahorro/Investors/'
-        self.bursa_dir   = 'Investing/Bursanet/'
-        self.bursa_info  = 'Investing.txt'
         self.bursa_2015  = 'Investing/2015/Investing_2015.txt'
 	self.bursa_2016  = 'Investing/2016/Investing_2016.txt'
 	self.invest_info = 'Investors_info.txt'
@@ -28,12 +26,18 @@ class Settings:
         self.file_month  = self.person + '_' + self.today_month 
         if not os.path.isdir(self.dir_month): os.system('mkdir {}'.format(self.dir_month))
        
-        self.invest_name = 'Investing.pdf'
         self.plot_name   = 'Plots_{}.pdf'.format(self.file_month)
         self.edo_name    = 'Edo_{}.csv'.format(self.file_month)
         self.file_finan  = 'Finances_{}.pdf'.format(self.file_month)
              
-            
+        if _invest == 'bursa':
+	   self.bursa_dir   = 'Investing/Bursanet/'
+	   self.bursa_info  = 'Investing.txt'
+	   self.invest_name = 'Investing.pdf'
+	else:
+	   self.bursa_dir   = 'Investing/Etoro/'
+	   self.bursa_info  = 'Etoro.txt'
+	   self.invest_name = 'Etoro.pdf'
         
     def traslation(self, month):
         mspanish = {'Jan':'Enero', 'Feb':'Febrero',
@@ -80,11 +84,11 @@ class Read_files:
         
         
 class Calculation:
-    def __init__(self, person, today_date):
+    def __init__(self, person, today_date, _invest='bursa'):
         self._person      = person
         self._today_date  = today_date
         
-        self.Setts        = Settings(self._person, self._today_date)
+        self.Setts        = Settings(self._person, self._today_date, _invest)
         self.Rfiles       = Read_files(self.Setts)
         
         self.df_deposits  = self.Rfiles.person_depos()
