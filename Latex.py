@@ -30,7 +30,7 @@ class Latex:
             f.write('\\email[\hfill]{%s}\n'%(self.Calcul.Person_info.email))
     
             
-            print self.Setts.today_day, self.Setts.month_name, self.Setts.today_year
+            #print self.Setts.today_day, self.Setts.month_name, self.Setts.today_year
             Latex_text_2 = """
 %%\date{\\today}\n
 \maketitle\n
@@ -39,11 +39,10 @@ tasa de inter\\'es del %.1f\%% anual y un cargo del %.2f\%% del monto total a re
 \\footnote{Esto es, por cada \$1000.0 MXN a retirar se har\\'a un cargo de \$%.1f MXN.}\n
         """%(self.Setts.today_day, self.Setts.month_name, this_year,
              self.Calcul.person_perct*100*365, self.Calcul.Setts.retiro*100,
-	     self.Calcul.Setts.retiro*1000)
+	       self.Calcul.Setts.retiro*1000)
             f.write(Latex_text_2 + '\n\n')
          
             
-
             Latex_text_3 = """
 \\begin{savenotes}
 \\begin{table}[h!]
@@ -63,8 +62,7 @@ Fecha de transacci\\'on  \qquad \qquad & Monto \qquad \qquad&  \qquad \qquad Int
             if self.Calcul.len_months > 1:
                 Latex_text_4 = """
 $\leftarrow$ %s/%s  \qquad \qquad & \$%.2f MXN     & \qquad \qquad  \$%.2f MXN & \qquad \qquad   \$%.2f MXN   \\\\
-                """%(this_year,
-		     self.Setts.today_month, 
+                """%(this_year, self.Setts.today_month, 
                      self.Calcul.group_monthly.cum_depos[-2],
                      self.Calcul.group_monthly.cum_interest[-2], 
                      self.Calcul.group_monthly.cum_total[-2]) 
@@ -115,16 +113,15 @@ Derecha: monto total acumulado en la cuenta hasta  el %s-%s-%s.}
 \end{center}
 \end{figure}
 
-            """%(self.Setts.file_month, 
-		self.Setts.month_name, this_year, 
-		self.Setts.today_day, self.Setts.month_name, this_year)
+            """%(self.Setts.file_month, self.Setts.month_name, this_year, 
+                 self.Setts.today_day,  self.Setts.month_name, this_year)
             f.write(Latex_text_7 +'\n')
             
             
 
             f.write("\centering {Anual   \qquad \qquad Deposito \qquad \qquad Inter\\'es acumulado \qquad  \qquad Total \qquad \qquad \hspace{2cm}}\\\\  \n")
             f.write("\centering {%s: \qquad  \\fbox{\qquad   \$ %5.2f \qquad  ,\qquad   \$ %5.2f \qquad ,\qquad    \$ %5.2f \qquad}}\\\\ "%(
-		    this_year,
+                    this_year,
                     self.Calcul.group_monthly.cum_depos[-1], 
                     self.Calcul.group_monthly.cum_interest[-1],
                     self.Calcul.group_monthly.cum_total[-1]))  
