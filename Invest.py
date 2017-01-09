@@ -162,7 +162,7 @@ class Performance(Calculation):
             
         result['earn'] = result.total - result.money_in
         result['perc'] = result.earn/result.money_in*100
-        rolmean  = pd.rolling_mean(result.earn, window=25)
+        rolmean  = pd.rolling_mean(result.earn, window=30)
         avg_rate = (self.earn_rate(rolmean, -1) + self.earn_rate(rolmean, -2))/2.
 
 

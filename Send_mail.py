@@ -16,9 +16,9 @@ class Send_mail():
     def message(self):
         text = """Edo de cuenta correspondiente al mes de {} {}.
 
-                    Saludos Feliz Dia de Reyes!!
+                    Saludos y Feliz Dia de Reyes!!
                     JaV \n\n""".format(self.Calcul.Setts.month_name,
-				                 self.Calcul.Setts.this_year)
+				                 self.Calcul.Setts.today_year)
         return text
                     
     
@@ -32,7 +32,7 @@ class Send_mail():
 
         msg['From'] = gmail_user
         msg['To']   = to
-        msg['Subject'] = 'Edo de cuenta {}'.format(self.Calcul.Setts.month_name)
+        msg['Subject'] = 'Nuevo - Edo de cuenta {}'.format(self.Calcul.Setts.month_name)
 
         msg.attach(MIMEText(self.message()))
 
