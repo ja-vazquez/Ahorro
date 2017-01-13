@@ -291,6 +291,8 @@ class Run_all(Calculation):
         pd.DataFrame(total_invest[['gain_investors','gain_mine']]).T.plot.bar(stacked=True, 
                     ax=ax3)
         plt.title('Gains')
+	plt.legend(loc='best')
+	plt.ylim(ymax =  total_invest[['gain_investors','gain_mine']].max()*1.5)
         plt.legend(['People: %.1f, %.1f%%'%(total_invest.gain_investors, 
                     total_invest.gain_investors/my_depos*100.), 
                     'Mine: %.1f,   %.1f%%'%(total_invest.gain_mine, 
@@ -313,22 +315,22 @@ class Finances(Calculation):
     
     def my_finances(self):
         pd.set_option('display.mpl_style', 'default')
-        finan = pd.read_csv(self.Setts.finances, sep='\s+', comment='#')
+        finan = pd.read_csv(self.Setts.finances, sep='\s+', comment='#', parse_dates=True)
         
         finan['total'] = finan.sum(axis=1)
         finan2         = finan.set_index(['date'])
         instruments    = finan.set_index(['date']).T
         finan2['bursa_mine'] = finan2['bursanet'] + finan2['investors']
-        
-
+ 
         fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, figsize=(10, 12))
         
-        finan2[['bursa_mine', 'etoro', 'tfcu-deb', 'bnx-deb', 'chase-deb', 'bbva', 'santa-deb', 'cash']].plot(
+        finan2[['bursa_mine', 'etoro', 'tfcu-deb', 'bnx-deb', 'chase-deb', 'bbva', 'cash']].plot(
                 kind='bar', ax= ax1, stacked=True)         
-        finan2[['tfcu-cred', 'bnx-cred', 'amz-cred', 'santa-cred', 'debts']].plot(
+        finan2[['tfcu-cred', 'bnx-cred', 'amz-cred', 'santa-cred', 'santa-deb', 'debts']].plot(
                 kind='bar', ax= ax2, stacked=True)
         instruments.ix['total'].plot(kind='bar', ax= ax3)
-        
+
+	for i, j in enumerate(instruments.ix['total']): ax3.text(i-0.1, j, str(j))
         ax1.set_title('Amount I have: %s'%(instruments.ix['total'][-1]))
         fig.subplots_adjust(hspace=0.1)
         
@@ -336,7 +338,15 @@ class Finances(Calculation):
         os.system('open -a Preview {}'.format(self.Setts.file_finan))
         #plt.show(block=True)
         
-        
+ 
+ 	
+    def autolabel(self, rects):
+		    # attach some text labels
+        for rect in rects:
+	        height = rect.get_height()
+	        ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
+	                '%d' % int(height),
+	                ha='center', va='bottom')
         
         
         
