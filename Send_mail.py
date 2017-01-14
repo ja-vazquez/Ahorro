@@ -30,9 +30,9 @@ class Send_mail():
         to         = self.Calcul.Person_info.email
         msg = MIMEMultipart()
 
-        msg['From'] = gmail_user
-        msg['To']   = to
-        msg['Subject'] = '1a Quincena -  {}'.format(self.Calcul.Setts.month_name)
+        msg['From']    = gmail_user
+        msg['To']      = to
+        msg['Subject'] = 'Edo de cuenta - 1a Quincena -  {}'.format(self.Calcul.Setts.month_name)
 
         msg.attach(MIMEText(self.message()))
 

@@ -57,8 +57,22 @@ class Settings:
                     'Dec':'Diciembre'}
         return mspanish[month]
         
-        
 
+    def setts_plots(self):
+        params1 = {'backend': 'pdf',
+                   'axes.labelsize': 15, 'text.fontsize': 18,
+                   'xtick.labelsize': 18, 'ytick.labelsize': 18,
+                   'legend.fontsize': 18, 'lines.markersize': 16,
+                   'font.size': 16,}
+        pylab.rcParams.update(params1)
+        pd.set_option('display.mpl_style', 'default')
+
+        
+    def open_file(self, name):
+        os.system("open -a Preview {}".format(name))
+        
+        
+        
         
 class Read_files:
     def __init__(self, Setts):
@@ -158,15 +172,7 @@ class Plotting():
     def __init__(self, Calcul):
         ## Mainly for plotting in Edo_cuenta
         self.Calcul = Calcul
-        
-        params1 = {'backend': 'pdf',
-                   'axes.labelsize': 15, 'text.fontsize': 18,
-                   'xtick.labelsize': 18, 'ytick.labelsize': 18,
-                   'legend.fontsize': 18, 'lines.markersize': 16,
-                   'font.size': 16,}
-        pylab.rcParams.update(params1)
-        pd.set_option('display.mpl_style', 'default')
-        
+        self.Calcul.Setts.setts_plots()        
         
         
     def _make_plot(self, ax, df, ylims, color='LimeGreen', label=None,
@@ -198,7 +204,7 @@ class Plotting():
 
             
             ax2= plt.subplot(gs[1])
-            self._make_plot(ax2, Deposits[1:], ylims=Deposits[1:].max()*1.2,
+            self._make_plot(ax2, Deposits[1:], ylims=Deposits[1:].max()*1.3,
                  title  = '%i'%int(self.Calcul.Setts.today_year),
                  label  = 'Depositado = $%5.2f'%(Deposits.sum()))
             plt.axhline(y=0, color='k')
@@ -256,21 +262,14 @@ class Run_all(Calculation):
         total_gain      = total_invest.bursa -  total_invest.cum_total + my_invest
         
         
-        
-        params1 = {'backend': 'pdf',
-                   'axes.labelsize': 15, 'text.fontsize': 16,
-                   'xtick.labelsize': 15, 'ytick.labelsize': 15,
-                   'legend.fontsize': 15, 'lines.markersize': 16,
-                   'font.size': 15,}
-        pylab.rcParams.update(params1)
-        pd.set_option('display.mpl_style', 'default')
+        Calcul.Setts.setts_plots()
         
         
         plt.figure(figsize = (15, 8))
         gs  = gridspec.GridSpec(1, 3, width_ratios= [3, 3, 3])
         
         ax1= plt.subplot(gs[0])
-        all_invest.cum_depos.plot(kind = 'bar', ax=ax1, color='orange', 
+        all_invest.cum_depos.plot(kind = 'bar', ax=ax1, color='gold', 
 			  label='Total: %.1f \n Investors: %.1f \n Mine: %.1f'%(
 			  total_depos, inv_depos, my_depos))
         plt.ylim(ymax =  all_invest.cum_depos.max()*1.3)		
@@ -288,11 +287,10 @@ class Run_all(Calculation):
         
         
         ax3=plt.subplot(gs[2])
-        pd.DataFrame(total_invest[['gain_investors','gain_mine']]).T.plot.bar(stacked=True, 
-                    ax=ax3)
+        pd.DataFrame(total_invest[['gain_investors','gain_mine']]).T.plot.bar(stacked=True, ax=ax3)
         plt.title('Gains')
-	plt.legend(loc='best')
-	plt.ylim(ymax =  total_invest[['gain_investors','gain_mine']].max()*1.5)
+        plt.legend(loc='best')
+        plt.ylim(ymax =  total_invest[['gain_investors','gain_mine']].sum()*1.3)
         plt.legend(['People: %.1f, %.1f%%'%(total_invest.gain_investors, 
                     total_invest.gain_investors/my_depos*100.), 
                     'Mine: %.1f,   %.1f%%'%(total_invest.gain_mine, 
@@ -303,8 +301,7 @@ class Run_all(Calculation):
                            total_invest.gain_investors+total_invest.gain_mine), fontsize=14)
        
         plt.savefig(self.Setts.file_people)
-        os.system("open -a Preview {}".format(self.Setts.file_people))
-        #plt.show(block=True)
+        self.Setts.open_file(self.Setts.file_people)
         
 
         
@@ -335,18 +332,7 @@ class Finances(Calculation):
         fig.subplots_adjust(hspace=0.1)
         
         plt.savefig(self.Setts.file_finan)
-        os.system('open -a Preview {}'.format(self.Setts.file_finan))
-        #plt.show(block=True)
-        
- 
- 	
-    def autolabel(self, rects):
-		    # attach some text labels
-        for rect in rects:
-	        height = rect.get_height()
-	        ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
-	                '%d' % int(height),
-	                ha='center', va='bottom')
-        
+        self.Setts.open_file(self.Setts.file_finan)
+
         
         

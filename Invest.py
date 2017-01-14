@@ -1,5 +1,4 @@
 
-import os
 import datetime 
 import pandas as pd
 import matplotlib as mpl
@@ -14,6 +13,7 @@ class Invest(Calculation):
     
         
     def investing(self):
+        self.Setts.setts_plots()
         file_bursa = self.Setts.bursa_dir + self.Setts.bursa_info
         df_invest  = self.Rfiles.read_bursa(file_bursa)
 
@@ -85,9 +85,7 @@ class Invest(Calculation):
         fig.tight_layout()
         
         plt.savefig(self.Setts.file_invest)
-        os.system("open -a Preview {}".format(self.Setts.file_invest))  
-        #plt.show(block=True)
-        
+        self.Setts.open_file(self.Setts.file_invest) 
         
         
         
@@ -180,7 +178,6 @@ class Performance(Calculation):
         result['perc'].plot(ax= ax2, ylim= (0, 40), label='Percentage')
         ax2.axhline(15, color= 'gray', linestyle= '--')
         
-        
         result['total'].plot(ax=ax3, color='g', label='Total')
         result['money_in'].plot(ax=ax3, color='orange', label='Money in')
         
@@ -188,8 +185,7 @@ class Performance(Calculation):
         for i, l in zip((ax1,ax2,ax3),('earn', 'perc', 'total')):  self.bplot(i, l, result)
         
         plt.savefig(self.Setts.file_perform)
-        os.system("open -a Preview {}".format(self.Setts.file_perform))
-        #plt.show(block=True)
+        self.Setts.open_file(self.Setts.file_perform)
         
 
         
