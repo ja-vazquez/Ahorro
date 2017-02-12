@@ -32,7 +32,7 @@ class Send_mail():
 
         msg['From']    = gmail_user
         msg['To']      = to
-        msg['Subject'] = 'Edo de cuenta - 1a Quincena -  {}'.format(self.Calcul.Setts.month_name)
+        msg['Subject'] = 'Inversiones - Edo de cuenta -  {}'.format(self.Calcul.Setts.month_name)
 
         msg.attach(MIMEText(self.message()))
 

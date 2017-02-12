@@ -34,7 +34,7 @@ class Latex:
             Latex_text_2 = """
 %%\date{\\today}\n
 \maketitle\n
-Estado de cuenta correspondiente hasta  el %s-%s del %s, considerando una
+Estado de cuenta correspondiente al %s-%s del %s, considerando una
 tasa de inter\\'es del %.1f\%% anual y un cargo del %.2f\%% del monto total a retirar. 
 \\footnote{Esto es, por cada \$1000.0 MXN a retirar se har\\'a un cargo de \$%.1f MXN.}\n
         """%(self.Setts.today_day, self.Setts.month_name, this_year,

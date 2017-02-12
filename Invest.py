@@ -13,7 +13,7 @@ class Invest(Calculation):
     
         
     def investing(self):
-        self.Setts.setts_plots()
+#        self.Setts.setts_plots()
         file_bursa = self.Setts.bursa_dir + self.Setts.bursa_info
         df_invest  = self.Rfiles.read_bursa(file_bursa)
 
@@ -70,7 +70,7 @@ class Invest(Calculation):
         fig.tight_layout()
 
         ax4 = plt.subplot(2, 2, 4)
-        ax4.bar(df_invest[gain_tmp > 0].index, df_invest[df_invest.day_perc > 0].day_perc, width=2, 
+        ax4.bar(df_invest[gain_tmp > 0].index, df_invest[gain_tmp > 0].day_perc, width=2, 
                 color='g', label='Total: %2.1f %% ' % (last_perc))
         ax4.bar(df_invest[gain_tmp < 0].index, df_invest[df_invest.day_perc < 0].day_perc, width=2, 
                 color='r', label='Monthly: %2.1f %% ' % (last_perc / len(df_monthly)))
@@ -160,7 +160,7 @@ class Performance(Calculation):
             
         result['earn'] = result.total - result.money_in
         result['perc'] = result.earn/result.money_in*100
-        rolmean  = pd.rolling_mean(result.earn, window=30)
+        rolmean  = pd.rolling_mean(result.earn, window= 30)
         avg_rate = (self.earn_rate(rolmean, -1) + self.earn_rate(rolmean, -2))/2.
 
 
@@ -173,13 +173,16 @@ class Performance(Calculation):
         ax1.set_ylim(ymin= 0)
         ax1.axhline(end_year_2015, color= 'gray', linestyle= '--')
         ax1.axhline(end_year_2015 + end_year_2016, color= 'gray', linestyle= '--')
-
+        ax1.get_yaxis().set_major_formatter(
+                    mpl.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
         
         result['perc'].plot(ax= ax2, ylim= (0, 40), label='Percentage')
         ax2.axhline(15, color= 'gray', linestyle= '--')
         
         result['total'].plot(ax=ax3, color='g', label='Total')
         result['money_in'].plot(ax=ax3, color='orange', label='Money in')
+        ax3.get_yaxis().set_major_formatter(
+                    mpl.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
         
         fig.subplots_adjust(hspace=0)
         for i, l in zip((ax1,ax2,ax3),('earn', 'perc', 'total')):  self.bplot(i, l, result)
