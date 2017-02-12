@@ -59,7 +59,7 @@ class Invest(Calculation):
         ax3.bar(df_invest[gain_tmp < 0].index, df_invest[gain_tmp < 0].day_gain, width=2, color='r')
         ax3.bar(df_invest[gain_tmp > 0].index, df_invest[gain_tmp > 0].day_gain, width=2, color='g')
         ax3.bar(df_monthly.index, df_monthly.day_gain, width=30, color='y', alpha=0.2, 
-                label='Earning_year: {0:,g} '.format(gain_tmp.sum()))
+                label='Earning_month: {0:,g} '.format(gain_tmp.sum()/len(df_monthly)))
         ax3.bar(df_monthly.index, df_invest.groupby([df_invest.index.month]).tail(1).money_in*self.person_perct*365/12., 
                 width=30, color='cyan', alpha=0.2)
         ax3.set_title('Daily Earnings')
@@ -165,7 +165,7 @@ class Performance(Calculation):
 
 
         fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, figsize=(14, 10))
-        
+
         result['earn'].plot(ax= ax1, color= 'c', label= 'Earn')
         rolmean.plot(ax= ax1, color= 'y', label= 'Avg')
         ax1.set_title('Deposits: %s,  total: %s, earn: %s, Percentage: %.1f %%, rate: %.1f p/month'%(
@@ -206,7 +206,9 @@ class Performance(Calculation):
                 rolmean.groupby([rolmean.index.month]).tail(1).values[idx-2])/2.
                           
                           
-                          
+    def earn_rate2(self, rolmean, idx):
+        return (rolmean.groupby([rolmean.index.month]).values[idx] -
+		rolmean.groupby([rolmean.index.month]).values[idx-2])/2.
                           
                           
         
