@@ -16,7 +16,7 @@ class Send_mail():
     def message(self):
         text = """Edo de cuenta correspondiente al mes de {} {}.
 
-                    Saludos!!
+		    Saludos :D  !!
                     JaV \n\n""".format(self.Calcul.Setts.month_name,
 				                 self.Calcul.Setts.today_year)
         return text

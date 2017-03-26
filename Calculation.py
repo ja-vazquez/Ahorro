@@ -322,7 +322,7 @@ class Finances(Calculation):
         fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, figsize=(10, 12))
         
         finan2[['bursa_mine', 'etoro', 'tfcu-deb', 'bnx-deb', 'chase-deb', 'bbva', 'cash']].plot(
-                kind='bar', ax= ax1, stacked=True)         
+                kind='bar', ax= ax1, stacked=True) 
         finan2[['tfcu-cred', 'bnx-cred', 'amz-cred', 'santa-cred', 'santa-deb', 'debts']].plot(
                 kind='bar', ax= ax2, stacked=True)
         instruments.ix['total'].plot(kind='bar', ax= ax3)
